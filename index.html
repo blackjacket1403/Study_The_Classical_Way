@@ -45,6 +45,10 @@
   button.solid:hover,.btn.solid:hover{background:#46434f; color:#fff;}
   button.on,.btn.on{border-color:var(--accent); color:var(--accent); background:rgba(184,120,58,.1);}
   button.ghost,.btn.ghost{color:var(--muted);} button.small,.btn.small{padding:8px 12px; font-size:12px;}
+  .file-btn{position:relative; overflow:hidden;}
+  .file-btn .file-input{position:absolute; inset:0; width:100%; height:100%; opacity:0; cursor:pointer;}
+  .track-hint{font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); margin-top:16px;}
+  .track-grid{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:12px;}
   .track-select{font-family:var(--sans); font-size:13px; color:var(--ink); cursor:pointer; background:rgba(255,255,255,.4); border:1px solid var(--line); border-radius:2px; padding:11px 20px; padding-right:32px; letter-spacing:.03em; outline:none; transition:all .2s ease; max-width:240px; -webkit-appearance:none; appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' stroke='%2334323c'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M1 1l4 4 4-4'/></svg>"); background-repeat:no-repeat; background-position:right 14px center;}
   .track-select:hover,.track-select:focus{border-color:var(--accent); color:#000; background-color:rgba(255,255,255,.7);}
   #controls{position:absolute; left:50%; bottom:28px; transform:translateX(-50%); pointer-events:auto; display:flex; flex-direction:column; gap:8px;
@@ -62,7 +66,6 @@
   #seek{width:min(250px,38vw);} .ctl-group input[type=range]{width:68px;}
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:13px; height:13px; border-radius:50%; background:var(--accent); cursor:pointer;}
   input[type=range]::-moz-range-thumb{width:13px; height:13px; border:none; border-radius:50%; background:var(--accent); cursor:pointer;}
-  #file{position:fixed; left:-9999px; top:0; width:1px; height:1px; opacity:0;}
   .mobile-note{display:none; font-size:12px; line-height:1.5; color:rgba(52,48,62,.7); margin-top:12px;}
   #hud{position:absolute; right:30px; bottom:30px; pointer-events:none; text-align:right; font-size:10.5px; letter-spacing:.12em; color:rgba(60,56,70,.5); line-height:1.8; text-shadow:0 1px 8px rgba(255,255,255,.5);}
   #hud b{color:var(--accent); font-weight:600;}
@@ -234,17 +237,19 @@
       <h1>Let the music<br>paint the seasons</h1>
       <p>Upload a movement of Vivaldi's <em>Four Seasons</em> and the landscape matches its season — name the file <em>Spring</em>, <em>L'estate</em>, <em>Autumn</em>, <em>Winter</em> (or its RV number) and it knows. A ribbon of light glows for each voice of the orchestra, drifting on the stereo wind and mirrored in still water.</p>
       <div class="hint-actions">
-        <label class="solid btn" id="loadBtn" for="file" role="button" tabindex="0">Upload a file</label>
-        <select class="track-select" id="trackSelect">
-          <option value="" disabled selected>Or choose a library track...</option>
-          <option value="Classicals.de-Vivaldi-The-Four-Seasons-01-John-Harrison-with-the-Wichita-State-University-Chamber-Players-Spring-Mvt-1-Allegro.mp3">🌸 Spring (Vivaldi)</option>
-          <option value="Spring 1 - Recomposed_ Vivaldi's Four Seasons (2012).mp3">🌸 Spring (Max Richter)</option>
-          <option value="Max Richter - Summer 3 - 2022 (Official Video).mp3">☀️ Summer (Max Richter)</option>
-          <option value="vivaldi-autumn-mvt-3.mp3">🍂 Autumn (Vivaldi)</option>
-          <option value="Max Richter - Autumn 3 - 2022 (Official Video).mp3">🍂 Autumn (Max Richter)</option>
-          <option value="Classicals.de-Vivaldi-The-Four-Seasons-10-John-Harrison-with-the-Wichita-State-University-Chamber-Players-Winter-Mvt-1-Allegro-non-molto.mp3">❄️ Winter (Vivaldi)</option>
-        </select>
+        <label class="solid btn file-btn" id="loadBtn" role="button" tabindex="0">Upload a file
+          <input class="file-input" type="file" accept="audio/*,video/*,.mp4,.m4a,.mov,.webm,.flac,.wav,.ogg" />
+        </label>
         <button class="ghost" id="sweepBtn">Hear a test tone</button>
+      </div>
+      <div class="track-hint">Or choose a library track...</div>
+      <div class="track-grid" id="trackGrid">
+        <button class="ghost small track-btn" data-track="Classicals.de-Vivaldi-The-Four-Seasons-01-John-Harrison-with-the-Wichita-State-University-Chamber-Players-Spring-Mvt-1-Allegro.mp3">🌸 Spring (Vivaldi)</button>
+        <button class="ghost small track-btn" data-track="Spring 1 - Recomposed_ Vivaldi's Four Seasons (2012).mp3">🌸 Spring (Max Richter)</button>
+        <button class="ghost small track-btn" data-track="Max Richter - Summer 3 - 2022 (Official Video).mp3">☀️ Summer (Max Richter)</button>
+        <button class="ghost small track-btn" data-track="vivaldi-autumn-mvt-3.mp3">🍂 Autumn (Vivaldi)</button>
+        <button class="ghost small track-btn" data-track="Max Richter - Autumn 3 - 2022 (Official Video).mp3">🍂 Autumn (Max Richter)</button>
+        <button class="ghost small track-btn" data-track="Classicals.de-Vivaldi-The-Four-Seasons-10-John-Harrison-with-the-Wichita-State-University-Chamber-Players-Winter-Mvt-1-Allegro-non-molto.mp3">❄️ Winter (Vivaldi)</button>
       </div>
       <div style="margin-top:14px;"><button class="ghost" id="relaxBtn" style="font-family:var(--serif); font-style:italic; font-size:14px;">…or drift in a generative ambient world</button></div>
     </div>
@@ -260,7 +265,9 @@
         <button class="ghost small" id="menuBtn">Controls</button>
       </div>
       <div class="ctrl-extra" id="ctrlExtra">
-        <label class="ghost small btn" id="loadBtn2" for="file" role="button" tabindex="0">Track</label>
+        <label class="ghost small btn file-btn" id="loadBtn2" role="button" tabindex="0">Track
+          <input class="file-input" type="file" accept="audio/*,video/*,.mp4,.m4a,.mov,.webm,.flac,.wav,.ogg" />
+        </label>
         <button class="ghost small" id="sweepBtn2">Tone</button>
         <button class="ghost small on" id="seasonBtn">Seasons: auto</button>
         <button class="ghost small" id="voicesBtn">Voices</button>
@@ -302,7 +309,6 @@
       <div class="pomo-row" style="margin-top:11px;"><button class="small ghost" id="pomoClose">Close</button></div>
     </div>
     <div id="status" class="status"></div>
-  <input id="file" type="file" accept="audio/*,video/*,.mp4,.m4a,.mov,.webm,.flac,.wav,.ogg" />
   <audio id="audio" crossorigin="anonymous"></audio>
 
   <script>
@@ -702,19 +708,16 @@
 
     // ---- UI ----
     const $=id=>document.getElementById(id);
-    const hint=$('hint'), controls=$('controls'), fileInput=$('file');
+    const hint=$('hint'), controls=$('controls');
+    const fileInputs=Array.from(document.querySelectorAll('.file-input'));
     function openFilePicker(){
-      if(!fileInput) return;
-      fileInput.value='';
-      if(typeof fileInput.showPicker==='function'){
-        try{ fileInput.showPicker(); return; }catch(e){}
+      const input=fileInputs[0];
+      if(!input) return;
+      input.value='';
+      if(typeof input.showPicker==='function'){
+        try{ input.showPicker(); return; }catch(e){}
       }
-      fileInput.click();
-    }
-    function bindFileButton(btn){
-      if(!btn) return;
-      btn.addEventListener('click', e=>{ e.preventDefault(); openFilePicker(); });
-      btn.addEventListener('touchend', e=>{ e.preventDefault(); openFilePicker(); }, {passive:false});
+      input.click();
     }
     const playBtn=$('playBtn'), seek=$('seek'), curT=$('cur'), durT=$('dur'), sub=$('sub');
     let seeking=false, sweepOsc=null, curURL=null;
@@ -754,15 +757,16 @@
       else { seasonPhase=Math.floor(Math.random()*4); seasonAuto=true; sb.textContent='Seasons: auto'; sb.classList.add('on'); }
       try{ await audioEl.play(); showStatus(det?('Now playing · '+det.label):('Playing custom track · seasons cycling'), true); }
       catch(err){ showStatus("Loaded '"+cleanName+"', but playback was blocked ("+err.name+"). Press play — and if it's still silent, click play or check browser permissions."); } }
-    fileInput.addEventListener('change', e=>{ const f=e.target.files[0]; if(f) loadSource(f, f.name); });
-    bindFileButton($('loadBtn')); bindFileButton($('loadBtn2'));
-    $('trackSelect').addEventListener('change', e=>{ const val=e.target.value; if(val) loadSource(val, val.split('/').pop()); });
+    fileInputs.forEach(inp=>inp.addEventListener('change', e=>{ const f=e.target.files[0]; if(f) loadSource(f, f.name); }));
+    document.querySelectorAll('.track-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{ const val=btn.getAttribute('data-track'); if(val) loadSource(val, val.split('/').pop()); });
+    });
     $('menuBtn').onclick=e=>{ e.stopPropagation(); $('ctrlExtra').classList.toggle('show'); $('menuBtn').classList.toggle('on'); };
     document.addEventListener('click', e=>{
       const drawer=$('ctrlExtra'); const btn=$('menuBtn');
       if(drawer && !drawer.contains(e.target) && e.target!==btn){ drawer.classList.remove('show'); btn.classList.remove('on'); }
     });
-    function goBack(){ if(!audioEl.paused) audioEl.pause(); if(sweepOsc) stopSweep(); if(Atmosphere.running) Atmosphere.stop(); if(micOn) stopMic(); controls.classList.add('hidden'); hint.classList.remove('gone'); $('trackSelect').value=""; showStatus('Returned to home screen', false); }
+    function goBack(){ if(!audioEl.paused) audioEl.pause(); if(sweepOsc) stopSweep(); if(Atmosphere.running) Atmosphere.stop(); if(micOn) stopMic(); controls.classList.add('hidden'); hint.classList.remove('gone'); showStatus('Returned to home screen', false); }
     $('backBtn').onclick=goBack;
     playBtn.onclick=async ()=>{ ensureAudio(); try{ await audioCtx.resume(); }catch(e){} if(!audioEl.src && !sweepOsc){ openFilePicker(); return; }
       if(audioEl.paused){ try{ await audioEl.play(); showStatus('Playing',true); } catch(err){ showStatus("Playback blocked ("+err.name+"). Open the downloaded file in Chrome — the preview pane mutes audio."); } } else audioEl.pause(); };
