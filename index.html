@@ -47,9 +47,12 @@
   button.ghost{color:var(--muted);} button.small{padding:8px 12px; font-size:12px;}
   .track-select{font-family:var(--sans); font-size:13px; color:var(--ink); cursor:pointer; background:rgba(255,255,255,.4); border:1px solid var(--line); border-radius:2px; padding:11px 20px; padding-right:32px; letter-spacing:.03em; outline:none; transition:all .2s ease; max-width:240px; -webkit-appearance:none; appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' stroke='%2334323c'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M1 1l4 4 4-4'/></svg>"); background-repeat:no-repeat; background-position:right 14px center;}
   .track-select:hover,.track-select:focus{border-color:var(--accent); color:#000; background-color:rgba(255,255,255,.7);}
-  #controls{position:absolute; left:50%; bottom:28px; transform:translateX(-50%); pointer-events:auto; display:flex; align-items:center; gap:13px; flex-wrap:wrap; justify-content:center;
-    max-width:min(960px,95vw); padding:13px 20px; background:var(--panel); backdrop-filter:blur(18px) saturate(1.1); -webkit-backdrop-filter:blur(18px) saturate(1.1); border:1px solid rgba(255,255,255,.55); border-radius:4px; box-shadow:0 14px 50px rgba(60,50,70,.16);}
+  #controls{position:absolute; left:50%; bottom:28px; transform:translateX(-50%); pointer-events:auto; display:flex; flex-direction:column; gap:8px;
+    max-width:min(960px,95vw); padding:13px 20px; background:var(--panel); backdrop-filter:blur(18px) saturate(1.1); -webkit-backdrop-filter:blur(18px) saturate(1.1); border:1px solid rgba(255,255,255,.55); border-radius:4px; box-shadow:0 14px 50px rgba(60,50,70,.16); transition:opacity .6s ease;}
   #controls.hidden{display:none;}
+  .ctrl-main{display:flex; align-items:center; gap:13px; width:100%; justify-content:center;}
+  .ctrl-extra{display:flex; align-items:center; gap:13px; flex-wrap:wrap; justify-content:center; width:100%;}
+  #menuBtn{display:none;}
   #playBtn{width:46px; height:46px; padding:0; border-radius:50%; font-size:15px; display:flex; align-items:center; justify-content:center; color:#fff; background:#2e2c34; border:none; flex:none;}
   #playBtn:hover{background:#46434f;}
   .time{font-variant-numeric:tabular-nums; font-size:12px; color:var(--muted); min-width:38px; text-align:center;}
@@ -136,6 +139,15 @@
     #diag{left:22px; bottom:22px; font-size:10px;}
     #pomo{right:22px; width:230px;}
     #season{font-size:18px;}
+    #menuBtn{display:inline-flex;}
+    .ctrl-extra{display:none; flex-direction:column; align-items:stretch; background:rgba(255,255,255,0.92);
+      backdrop-filter:blur(24px) saturate(1.2); -webkit-backdrop-filter:blur(24px) saturate(1.2); border:1px solid rgba(255,255,255,0.65);
+      border-radius:12px; padding:16px 20px; position:absolute; bottom:calc(100% + 12px); left:0; right:0;
+      box-shadow:0 14px 44px rgba(60,50,70,0.18); max-height:60svh; overflow-y:auto; gap:14px; z-index:9999;}
+    .ctrl-extra.show{display:flex;}
+    .ctrl-extra .divider{width:100%; height:1px; background:var(--line);}
+    .ctrl-extra button{width:100%; text-align:center; padding:12px 14px; font-size:12px;}
+    .ctrl-extra .ctl-group{display:flex; justify-content:space-between; width:100%;}
   }
 
   /* ---- phone (≤ 640px) ---- */
@@ -144,27 +156,37 @@
     .brand{font-size:22px;}
     .sub{font-size:9px; margin-top:5px;}
     #credit,#diag{display:none;}
-    #hint{max-width:calc(100vw - 32px); padding:24px 20px; border-radius:8px; width:auto;}
+    #hint{max-width:calc(100vw - 32px); max-height:calc(100svh - 112px); overflow:auto; padding:22px 18px; border-radius:8px; width:auto; top:64px; bottom:76px;}
     #hint .kicker{font-size:13px;}
-    #hint h1{font-size:28px; margin-bottom:12px;}
-    #hint p{font-size:12.5px; line-height:1.65; margin-bottom:20px;}
+    #hint h1{font-size:27px; margin-bottom:10px;}
+    #hint p{font-size:12px; line-height:1.58; margin-bottom:16px;}
     #hint em{font-size:14px;}
-    .hint-actions{gap:8px;}
-    .hint-actions button, .hint-actions select{padding:12px 16px; font-size:12px; height:40px;}
+    .hint-actions{display:flex; flex-direction:column; align-items:stretch; gap:10px; width:100%;}
+    .hint-actions button, .hint-actions select{padding:12px 14px; font-size:12px; min-height:44px; width:100% !important; max-width:100% !important;}
     .track-select{max-width:100%; width:100%;}
-    #controls{gap:8px; padding:10px 12px; bottom:12px; max-width:96vw; border-radius:8px;
+    #controls{left:8px; right:8px; bottom:8px; transform:none; max-width:none; max-height:none; overflow:visible; gap:0; padding:10px 12px; border-radius:8px;
       padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));}
-    #playBtn{width:40px; height:40px; font-size:13px;}
-    .time{font-size:11px; min-width:32px;}
-    #seek{width:min(160px,34vw);}
-    .divider{height:18px;}
-    button.small{padding:8px 10px; font-size:11px;}
+    .ctrl-main{justify-content:space-between; width:100%; gap:8px;}
+    .ctrl-main .divider{display:none;}
+    .ctrl-extra{position:absolute; bottom:calc(100% + 8px); left:0; right:0; background:rgba(255,255,255,0.94);
+      backdrop-filter:blur(24px) saturate(1.2); -webkit-backdrop-filter:blur(24px) saturate(1.2); border:1px solid rgba(255,255,255,0.65);
+      border-radius:8px; padding:14px 16px; box-shadow:0 10px 30px rgba(60,50,70,0.18); max-height:45svh; overflow-y:auto; gap:10px; z-index:9999; display:none; flex-direction:column; align-items:stretch;}
+    .ctrl-extra.show{display:flex;}
+    .ctrl-extra .divider{display:block; width:100%; height:1px; background:var(--line); margin:4px 0;}
+    .ctrl-extra button{padding:10px; font-size:11px; min-height:40px; width:100%; text-align:center;}
+    .ctrl-extra .ctl-group{display:flex; justify-content:space-between; width:100%; align-items:center; min-height:40px;}
+    .ctrl-extra .ctl-group input[type=range]{width:60%;}
+    #playBtn{width:38px; height:38px; font-size:12px;}
+    .time{font-size:10.5px; min-width:28px;}
+    #seek{flex:1; width:auto; min-width:60px;}
+    button.small{padding:8px 9px; font-size:10.5px; min-height:36px;}
     #season{font-size:15px; top:22px;}
     #hud{right:16px; bottom:16px; font-size:9px; letter-spacing:.08em;}
-    .status{max-width:calc(100vw - 32px); font-size:12px; padding:12px 16px;}
-    #pomo{top:auto; bottom:90px; right:50%; transform:translateX(50%); width:calc(100vw - 32px); max-width:280px; border-radius:8px;}
+    .status{top:auto; bottom:80px; max-width:calc(100vw - 32px); font-size:12px; padding:12px 16px;}
+    #pomo{top:auto; bottom:80px; right:50%; transform:translateX(50%); width:calc(100vw - 32px); max-width:300px; max-height:42svh; overflow:auto; border-radius:8px;}
     #pomo.show{transform:translateX(50%);}
-    .pomo-time{font-size:44px;}
+    .pomo-time{font-size:40px;}
+    #taskList{max-height:90px;}
     .task-add input{font-size:14px; padding:9px 10px;}
   }
 
@@ -174,7 +196,7 @@
     #hint h1{font-size:24px;}
     #controls{gap:6px; padding:8px 8px;}
     button.small{padding:7px 8px; font-size:10px;}
-    #seek{width:28vw;}
+    #seek{min-width:96px;}
     .ctl-group input[type=range]{width:52px;}
     .ctl-group span{font-size:9px;}
     #pomo{width:calc(100vw - 24px);}
@@ -185,9 +207,9 @@
     #topbar{top:10px; left:14px;}
     .brand{font-size:20px;}
     .sub{display:none;}
-    #controls{bottom:8px; padding:8px 14px; gap:8px;}
+    #controls{bottom:8px; padding:8px 14px; gap:8px; max-height:38svh; overflow:auto;}
     #playBtn{width:36px; height:36px;}
-    #hint{padding:20px 24px; max-width:420px;}
+    #hint{padding:18px 22px; max-width:420px; max-height:calc(100svh - 72px); overflow:auto;}
     #hint h1{font-size:26px; margin-bottom:10px;}
     #hint p{font-size:11px; margin-bottom:14px;}
     #season{top:10px; font-size:14px;}
@@ -223,28 +245,33 @@
       <div style="margin-top:14px;"><button class="ghost" id="relaxBtn" style="font-family:var(--serif); font-style:italic; font-size:14px;">…or drift in a generative ambient world</button></div>
     </div>
     <div id="controls" class="hidden">
-      <button class="ghost small" id="backBtn" style="font-weight:600;">← Home</button>
-      <div class="divider"></div>
-      <button id="playBtn" aria-label="Play">&#9654;</button>
-      <span class="time" id="cur">0:00</span>
-      <input id="seek" type="range" min="0" max="1000" value="0" aria-label="Seek" />
-      <span class="time" id="dur">0:00</span>
-      <div class="divider"></div>
-      <button class="ghost small" id="loadBtn2">Track</button>
-      <button class="ghost small" id="sweepBtn2">Tone</button>
-      <button class="ghost small on" id="seasonBtn">Seasons: auto</button>
-      <button class="ghost small" id="voicesBtn">Voices</button>
-      <button class="ghost small" id="fsBtn">Fullscreen</button>
-      <button class="ghost small" id="saveBtn">Save</button>
-      <div class="divider"></div>
-      <button class="ghost small" id="ambBtn">Ambient</button>
-      <button class="ghost small" id="micBtn">Mic</button>
-      <button class="ghost small" id="moodBtn">Mood: Serene</button>
-      <button class="ghost small" id="pomoBtn">Focus</button>
-      <button class="ghost small" id="studyBtn">Study</button>
-      <div class="divider"></div>
-      <div class="ctl-group"><span>Vol</span><input id="vol" type="range" min="0" max="100" value="80" /></div>
-      <div class="ctl-group"><span>Sens</span><input id="sens" type="range" min="50" max="300" value="130" /></div>
+      <div class="ctrl-main">
+        <button class="ghost small" id="backBtn" style="font-weight:600;">← Home</button>
+        <div class="divider"></div>
+        <button id="playBtn" aria-label="Play">&#9654;</button>
+        <span class="time" id="cur">0:00</span>
+        <input id="seek" type="range" min="0" max="1000" value="0" aria-label="Seek" />
+        <span class="time" id="dur">0:00</span>
+        <div class="divider"></div>
+        <button class="ghost small" id="menuBtn">Controls</button>
+      </div>
+      <div class="ctrl-extra" id="ctrlExtra">
+        <button class="ghost small" id="loadBtn2">Track</button>
+        <button class="ghost small" id="sweepBtn2">Tone</button>
+        <button class="ghost small on" id="seasonBtn">Seasons: auto</button>
+        <button class="ghost small" id="voicesBtn">Voices</button>
+        <button class="ghost small" id="fsBtn">Fullscreen</button>
+        <button class="ghost small" id="saveBtn">Save</button>
+        <div class="divider"></div>
+        <button class="ghost small" id="ambBtn">Ambient</button>
+        <button class="ghost small" id="micBtn">Mic</button>
+        <button class="ghost small" id="moodBtn">Mood: Serene</button>
+        <button class="ghost small" id="pomoBtn">Focus</button>
+        <button class="ghost small" id="studyBtn">Study</button>
+        <div class="divider"></div>
+        <div class="ctl-group"><span>Vol</span><input id="vol" type="range" min="0" max="100" value="80" /></div>
+        <div class="ctl-group"><span>Sens</span><input id="sens" type="range" min="50" max="300" value="130" /></div>
+      </div>
     </div>
     <div id="hud">low voices on the water · high in the sky<br><span style="color:#3f86a0">left</span> &amp; <span style="color:#b06a86">right</span> set the <b>wind</b><br><span style="opacity:.6">space&nbsp;·&nbsp;F&nbsp;·&nbsp;H&nbsp;·&nbsp;S&nbsp;·&nbsp;A&nbsp;·&nbsp;M&nbsp;·&nbsp;P</span></div>
     <div id="diag"></div>
@@ -677,10 +704,32 @@
     let seeking=false, sweepOsc=null, curURL=null;
     const fmt=s=>{ s=Math.floor(s||0); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
     function showStatus(msg,ok){ const el=$('status'); el.textContent=msg; el.style.borderColor=ok?'rgba(120,170,120,.5)':'rgba(200,120,80,.45)'; el.style.color=ok?'#3f6a40':'#7a4a30'; el.classList.add('show'); clearTimeout(showStatus._t); showStatus._t=setTimeout(()=>el.classList.remove('show'), ok?2400:8000); }
+    function compactControls(){ if(window.matchMedia('(max-width: 640px)').matches) controls.classList.add('compact'); }
+    function trackUrl(path){ return new URL(encodeURI(path), window.location.href).href; }
     async function loadSource(src, name){ ensureAudio(); try{ await audioCtx.resume(); }catch(e){}
+      if(sweepOsc) stopSweep();
+      if(Atmosphere.running){ Atmosphere.stop(); ambSync(); }
+      if(typeof micOn!=='undefined' && micOn) stopMic();
       if(curURL){ URL.revokeObjectURL(curURL); curURL=null; }
-      if(src instanceof File){ curURL=URL.createObjectURL(src); audioEl.src=curURL; }
-      else { audioEl.src=src; }
+      if(src instanceof File){
+        audioEl.removeAttribute('crossorigin');
+        curURL=URL.createObjectURL(src);
+        audioEl.src=curURL;
+      } else {
+        const fullUrl=trackUrl(src);
+        try {
+          const u=new URL(fullUrl);
+          if(u.origin===window.location.origin){
+            audioEl.removeAttribute('crossorigin');
+          } else {
+            audioEl.setAttribute('crossorigin','anonymous');
+          }
+        } catch(err){
+          audioEl.removeAttribute('crossorigin');
+        }
+        audioEl.src=fullUrl;
+      }
+      audioEl.load();
       hint.classList.add('gone'); controls.classList.remove('hidden');
       const cleanName=name.replace(/\.[^.]+$/,'').replace(/^[0-9+]+|[0-9_]+/g,' ').trim();
       sub.textContent=cleanName;
@@ -691,7 +740,12 @@
       catch(err){ showStatus("Loaded '"+cleanName+"', but playback was blocked ("+err.name+"). Press play — and if it's still silent, click play or check browser permissions."); } }
     fileInput.addEventListener('change', e=>{ const f=e.target.files[0]; if(f) loadSource(f, f.name); });
     $('loadBtn').onclick=()=>fileInput.click(); $('loadBtn2').onclick=()=>fileInput.click();
-    $('trackSelect').onchange=e=>{ const val=e.target.value; if(val) loadSource(val, val.split('/').pop()); };
+    $('trackSelect').addEventListener('change', e=>{ const val=e.target.value; if(val) loadSource(val, val.split('/').pop()); });
+    $('menuBtn').onclick=e=>{ e.stopPropagation(); $('ctrlExtra').classList.toggle('show'); $('menuBtn').classList.toggle('on'); };
+    document.addEventListener('click', e=>{
+      const drawer=$('ctrlExtra'); const btn=$('menuBtn');
+      if(drawer && !drawer.contains(e.target) && e.target!==btn){ drawer.classList.remove('show'); btn.classList.remove('on'); }
+    });
     function goBack(){ if(!audioEl.paused) audioEl.pause(); if(sweepOsc) stopSweep(); if(Atmosphere.running) Atmosphere.stop(); if(micOn) stopMic(); controls.classList.add('hidden'); hint.classList.remove('gone'); $('trackSelect').value=""; showStatus('Returned to home screen', false); }
     $('backBtn').onclick=goBack;
     playBtn.onclick=async ()=>{ ensureAudio(); try{ await audioCtx.resume(); }catch(e){} if(!audioEl.src && !sweepOsc){ fileInput.click(); return; }
@@ -728,14 +782,14 @@
       o.frequency.setValueAtTime(70,t); o.frequency.exponentialRampToValueAtTime(3500,t+12); o.frequency.exponentialRampToValueAtTime(70,t+15);
       p.pan.setValueAtTime(-1,t); p.pan.linearRampToValueAtTime(1,t+7.5); p.pan.linearRampToValueAtTime(-1,t+15);
       o.start(t); o.stop(t+15); sweepOsc=o; o.onended=()=>{ if(sweepOsc===o){ sweepOsc=null; $('sweepBtn').classList.remove('on'); $('sweepBtn2').classList.remove('on'); } };
-      hint.classList.add('gone'); controls.classList.remove('hidden'); $('sweepBtn').classList.add('on'); $('sweepBtn2').classList.add('on'); }
+      hint.classList.add('gone'); controls.classList.remove('hidden'); compactControls(); $('sweepBtn').classList.add('on'); $('sweepBtn2').classList.add('on'); }
     function stopSweep(){ if(sweepOsc){ try{sweepOsc.stop();}catch(e){} sweepOsc=null; } $('sweepBtn').classList.remove('on'); $('sweepBtn2').classList.remove('on'); }
     function toggleSweep(){ sweepOsc?stopSweep():startSweep(); }
     $('sweepBtn').onclick=toggleSweep; $('sweepBtn2').onclick=toggleSweep;
 
     // ---- ambient engine / mood / pomodoro / study ----
     function ambSync(){ const b=$('ambBtn'); b.classList.toggle('on',Atmosphere.running); b.textContent=Atmosphere.running?'Ambient: on':'Ambient'; }
-    function startAmbient(){ if(!audioEl.paused) audioEl.pause(); if(sweepOsc) stopSweep(); Atmosphere.start(); hint.classList.add('gone'); controls.classList.remove('hidden'); ambSync(); showStatus('Generative ambient · '+mood().name+' · '+SEASONS[seasonNow()].name, true); }
+    function startAmbient(){ if(!audioEl.paused) audioEl.pause(); if(sweepOsc) stopSweep(); Atmosphere.start(); hint.classList.add('gone'); controls.classList.remove('hidden'); compactControls(); ambSync(); showStatus('Generative ambient · '+mood().name+' · '+SEASONS[seasonNow()].name, true); }
     $('ambBtn').onclick=()=>{ if(Atmosphere.running) Atmosphere.stop(); else startAmbient(); ambSync(); };
     if($('relaxBtn')) $('relaxBtn').onclick=startAmbient;
 
@@ -746,7 +800,7 @@
         micStream=stream; micSource=audioCtx.createMediaStreamSource(stream); micSource.connect(masterIn);
         micOn=true; $('micBtn').classList.add('on'); $('micBtn').textContent='Mic: on';
         if(!audioEl.paused) audioEl.pause(); if(sweepOsc) stopSweep(); if(Atmosphere.running){ Atmosphere.stop(); ambSync(); }
-        hint.classList.add('gone'); controls.classList.remove('hidden');
+        hint.classList.add('gone'); controls.classList.remove('hidden'); compactControls();
         showStatus('Microphone active — play Vivaldi live!', true);
       }).catch(err=>{ showStatus('Microphone access denied ('+err.name+'). Check browser permissions.'); }); }
     function stopMic(){ micOn=false; if(micSource){ try{micSource.disconnect();}catch(e){} micSource=null; }
@@ -806,7 +860,7 @@
 
     let studyOn=false;
     function setStudy(v){ studyOn=v; document.body.classList.toggle('study',v); $('studyBtn').classList.toggle('on',v);
-      if(v){ moodIdx=2; updateMoodBtn(); if(audioEl.paused && !sweepOsc && !Atmosphere.running) startAmbient(); else ambSync(); Pomo.show(true); hint.classList.add('gone'); controls.classList.remove('hidden'); showStatus('Study mode — calm sound, soft motion. Press Esc to exit.', true); }
+      if(v){ moodIdx=2; updateMoodBtn(); if(audioEl.paused && !sweepOsc && !Atmosphere.running) startAmbient(); else ambSync(); Pomo.show(true); hint.classList.add('gone'); controls.classList.remove('hidden'); compactControls(); showStatus('Study mode — calm sound, soft motion. Press Esc to exit.', true); }
       else { showStatus('Left study mode', true); } }
     $('studyBtn').onclick=()=>setStudy(!studyOn);
     window.addEventListener('dragover', e=>{ e.preventDefault(); document.body.classList.add('drag'); });
