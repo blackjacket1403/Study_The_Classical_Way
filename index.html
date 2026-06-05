@@ -9,8 +9,10 @@
 <meta property="og:title" content="quattro. — a music landscape" />
 <meta property="og:description" content="A painterly, audio-reactive landscape that reads the season from Vivaldi's Four Seasons and brings it to life on canvas." />
 <meta property="og:type" content="website" />
+<meta property="og:url" content="https://blackjacket1403.github.io/Study_The_Classical_Way/" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="theme-color" content="#e7eef0" />
+<link rel="canonical" href="https://blackjacket1403.github.io/Study_The_Classical_Way/" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
@@ -684,8 +686,8 @@
       sub.textContent=cleanName;
       const det=detectSeason(name); const sb=$('seasonBtn');
       if(det){ seasonPhase=det.key; seasonAuto=false; sb.textContent='Seasons: hold'; sb.classList.remove('on'); }
-      else { seasonPhase=Math.floor(Math.random()*4); seasonAuto=false; sb.textContent='Seasons: hold'; sb.classList.remove('on'); }
-      try{ await audioEl.play(); showStatus(det?('Now playing · '+det.label):('Playing — '+cleanName), true); }
+      else { seasonPhase=Math.floor(Math.random()*4); seasonAuto=true; sb.textContent='Seasons: auto'; sb.classList.add('on'); }
+      try{ await audioEl.play(); showStatus(det?('Now playing · '+det.label):('Playing custom track · seasons cycling'), true); }
       catch(err){ showStatus("Loaded '"+cleanName+"', but playback was blocked ("+err.name+"). Press play — and if it's still silent, click play or check browser permissions."); } }
     fileInput.addEventListener('change', e=>{ const f=e.target.files[0]; if(f) loadSource(f, f.name); });
     $('loadBtn').onclick=()=>fileInput.click(); $('loadBtn2').onclick=()=>fileInput.click();
