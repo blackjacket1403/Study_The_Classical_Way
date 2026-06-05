@@ -22,7 +22,7 @@
     --serif:'Cormorant Garamond',Georgia,serif; --sans:'Archivo',-apple-system,sans-serif; }
   *{box-sizing:border-box; margin:0; padding:0;}
   html,body{height:100%; width:100%; overflow:hidden; background:#e7eef0; color:var(--ink); font-family:var(--sans);}
-  #c{position:fixed; inset:0; width:100%; height:100%; display:block;}
+  #c{position:fixed; inset:0; width:100%; height:100%; display:block; pointer-events:none;}
   #topbar{position:absolute; top:26px; left:30px; pointer-events:none; text-shadow:0 1px 12px rgba(255,255,255,.45); transition:opacity .5s ease;}
   .brand{font-family:var(--serif); font-weight:500; font-size:30px; letter-spacing:.04em; line-height:1; color:var(--ink);}
   .brand .dot{color:var(--accent);}
@@ -38,12 +38,12 @@
   #hint p{font-size:14px; line-height:1.72; color:rgba(52,48,62,.78); margin-bottom:28px;}
   #hint em{font-family:var(--serif); font-style:italic; font-size:16px; color:var(--accent);}
   .hint-actions{display:flex; gap:12px; justify-content:center; flex-wrap:wrap;}
-  button,.btn{font-family:var(--sans); font-size:13px; color:var(--ink); cursor:pointer; background:rgba(255,255,255,.4); border:1px solid var(--line); border-radius:2px; padding:11px 20px; letter-spacing:.03em; transition:all .2s ease;}
-  button:hover{border-color:var(--accent); color:#000; background:rgba(255,255,255,.7);}
-  button.solid{background:#2e2c34; color:#fff; border-color:#2e2c34; font-weight:600;}
-  button.solid:hover{background:#46434f; color:#fff;}
-  button.on{border-color:var(--accent); color:var(--accent); background:rgba(184,120,58,.1);}
-  button.ghost{color:var(--muted);} button.small{padding:8px 12px; font-size:12px;}
+  button,.btn{font-family:var(--sans); font-size:13px; color:var(--ink); cursor:pointer; background:rgba(255,255,255,.4); border:1px solid var(--line); border-radius:2px; padding:11px 20px; letter-spacing:.03em; transition:all .2s ease; display:inline-flex; align-items:center; justify-content:center; touch-action:manipulation; -webkit-tap-highlight-color:transparent;}
+  button:hover,.btn:hover{border-color:var(--accent); color:#000; background:rgba(255,255,255,.7);}
+  button.solid,.btn.solid{background:#2e2c34; color:#fff; border-color:#2e2c34; font-weight:600;}
+  button.solid:hover,.btn.solid:hover{background:#46434f; color:#fff;}
+  button.on,.btn.on{border-color:var(--accent); color:var(--accent); background:rgba(184,120,58,.1);}
+  button.ghost,.btn.ghost{color:var(--muted);} button.small,.btn.small{padding:8px 12px; font-size:12px;}
   .track-select{font-family:var(--sans); font-size:13px; color:var(--ink); cursor:pointer; background:rgba(255,255,255,.4); border:1px solid var(--line); border-radius:2px; padding:11px 20px; padding-right:32px; letter-spacing:.03em; outline:none; transition:all .2s ease; max-width:240px; -webkit-appearance:none; appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' stroke='%2334323c'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M1 1l4 4 4-4'/></svg>"); background-repeat:no-repeat; background-position:right 14px center;}
   .track-select:hover,.track-select:focus{border-color:var(--accent); color:#000; background-color:rgba(255,255,255,.7);}
   #controls{position:absolute; left:50%; bottom:28px; transform:translateX(-50%); pointer-events:auto; display:flex; flex-direction:column; gap:8px;
@@ -230,7 +230,7 @@
       <h1>Let the music<br>paint the seasons</h1>
       <p>Upload a movement of Vivaldi's <em>Four Seasons</em> and the landscape matches its season — name the file <em>Spring</em>, <em>L'estate</em>, <em>Autumn</em>, <em>Winter</em> (or its RV number) and it knows. A ribbon of light glows for each voice of the orchestra, drifting on the stereo wind and mirrored in still water.</p>
       <div class="hint-actions">
-        <button class="solid" id="loadBtn">Upload a file</button>
+        <label class="solid btn" id="loadBtn" for="file" role="button" tabindex="0">Upload a file</label>
         <select class="track-select" id="trackSelect">
           <option value="" disabled selected>Or choose a library track...</option>
           <option value="Classicals.de-Vivaldi-The-Four-Seasons-01-John-Harrison-with-the-Wichita-State-University-Chamber-Players-Spring-Mvt-1-Allegro.mp3">🌸 Spring (Vivaldi)</option>
@@ -256,7 +256,7 @@
         <button class="ghost small" id="menuBtn">Controls</button>
       </div>
       <div class="ctrl-extra" id="ctrlExtra">
-        <button class="ghost small" id="loadBtn2">Track</button>
+        <label class="ghost small btn" id="loadBtn2" for="file" role="button" tabindex="0">Track</label>
         <button class="ghost small" id="sweepBtn2">Tone</button>
         <button class="ghost small on" id="seasonBtn">Seasons: auto</button>
         <button class="ghost small" id="voicesBtn">Voices</button>
@@ -699,6 +699,19 @@
     // ---- UI ----
     const $=id=>document.getElementById(id);
     const hint=$('hint'), controls=$('controls'), fileInput=$('file');
+    function openFilePicker(){
+      if(!fileInput) return;
+      fileInput.value='';
+      if(typeof fileInput.showPicker==='function'){
+        try{ fileInput.showPicker(); return; }catch(e){}
+      }
+      fileInput.click();
+    }
+    function bindFileButton(btn){
+      if(!btn) return;
+      btn.addEventListener('click', e=>{ e.preventDefault(); openFilePicker(); });
+      btn.addEventListener('touchend', e=>{ e.preventDefault(); openFilePicker(); }, {passive:false});
+    }
     const playBtn=$('playBtn'), seek=$('seek'), curT=$('cur'), durT=$('dur'), sub=$('sub');
     let seeking=false, sweepOsc=null, curURL=null;
     const fmt=s=>{ s=Math.floor(s||0); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
@@ -738,7 +751,7 @@
       try{ await audioEl.play(); showStatus(det?('Now playing · '+det.label):('Playing custom track · seasons cycling'), true); }
       catch(err){ showStatus("Loaded '"+cleanName+"', but playback was blocked ("+err.name+"). Press play — and if it's still silent, click play or check browser permissions."); } }
     fileInput.addEventListener('change', e=>{ const f=e.target.files[0]; if(f) loadSource(f, f.name); });
-    $('loadBtn').onclick=()=>fileInput.click(); $('loadBtn2').onclick=()=>fileInput.click();
+    bindFileButton($('loadBtn')); bindFileButton($('loadBtn2'));
     $('trackSelect').addEventListener('change', e=>{ const val=e.target.value; if(val) loadSource(val, val.split('/').pop()); });
     $('menuBtn').onclick=e=>{ e.stopPropagation(); $('ctrlExtra').classList.toggle('show'); $('menuBtn').classList.toggle('on'); };
     document.addEventListener('click', e=>{
@@ -747,7 +760,7 @@
     });
     function goBack(){ if(!audioEl.paused) audioEl.pause(); if(sweepOsc) stopSweep(); if(Atmosphere.running) Atmosphere.stop(); if(micOn) stopMic(); controls.classList.add('hidden'); hint.classList.remove('gone'); $('trackSelect').value=""; showStatus('Returned to home screen', false); }
     $('backBtn').onclick=goBack;
-    playBtn.onclick=async ()=>{ ensureAudio(); try{ await audioCtx.resume(); }catch(e){} if(!audioEl.src && !sweepOsc){ fileInput.click(); return; }
+    playBtn.onclick=async ()=>{ ensureAudio(); try{ await audioCtx.resume(); }catch(e){} if(!audioEl.src && !sweepOsc){ openFilePicker(); return; }
       if(audioEl.paused){ try{ await audioEl.play(); showStatus('Playing',true); } catch(err){ showStatus("Playback blocked ("+err.name+"). Open the downloaded file in Chrome — the preview pane mutes audio."); } } else audioEl.pause(); };
     audioEl.addEventListener('play', ()=>playBtn.innerHTML='&#10074;&#10074;');
     audioEl.addEventListener('pause', ()=>playBtn.innerHTML='&#9654;');
@@ -770,7 +783,7 @@
     window.addEventListener('keydown', e=>{ const tag=(e.target&&e.target.tagName)||''; if(tag==='INPUT'||tag==='TEXTAREA') return; const k=e.key.toLowerCase();
       if(k===' '){ e.preventDefault(); playBtn.click(); } else if(k==='f') toggleFS(); else if(k==='v') $('voicesBtn').click(); else if(k==='h') document.body.classList.toggle('hideui'); else if(k==='s') $('saveBtn').click();
       else if(k==='a') $('ambBtn').click(); else if(k==='m') $('moodBtn').click(); else if(k==='p') $('pomoBtn').click();
-      else if(k==='l') fileInput.click();
+      else if(k==='l') openFilePicker();
       else if(k==='escape'){ if(studyOn) setStudy(false); else if(Pomo.on) Pomo.show(false); else goBack(); }
       else if(k==='arrowright'){ seasonPhase+=0.5; }
       else if(k>='1'&&k<='4'){ seasonPhase=parseInt(k,10)-1; seasonAuto=false; const sb=$('seasonBtn'); sb.textContent='Seasons: hold'; sb.classList.remove('on'); } });
