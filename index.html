@@ -31,7 +31,7 @@
   #season{position:absolute; top:30px; left:50%; transform:translateX(-50%); pointer-events:none; font-family:var(--serif); font-style:italic; font-size:20px; letter-spacing:.08em; color:rgba(52,50,60,.62); text-shadow:0 1px 14px rgba(255,255,255,.55); transition:opacity .8s ease;}
   #hint{position:absolute; inset:0; margin:auto; pointer-events:auto; text-align:center; max-width:540px; width:max-content; height:fit-content; padding:42px 44px;
     background:var(--panel); backdrop-filter:blur(18px) saturate(1.1); -webkit-backdrop-filter:blur(18px) saturate(1.1); border:1px solid rgba(255,255,255,.55); border-radius:4px; box-shadow:0 20px 70px rgba(60,50,70,.18); transition:opacity .7s ease, transform .7s ease;}
-  #hint.gone{opacity:0; transform:translateY(8px); pointer-events:none;}
+  #hint.gone{opacity:0; transform:translateY(8px); pointer-events:none; display:none;}
   #hint .kicker{font-family:var(--serif); font-style:italic; font-size:15px; letter-spacing:.06em; color:var(--accent); margin-bottom:14px;}
   #hint h1{font-family:var(--serif); font-weight:500; font-size:46px; line-height:1.04; margin-bottom:16px; color:#2b2933;}
   #hint p{font-size:14px; line-height:1.72; color:rgba(52,48,62,.78); margin-bottom:28px;}
@@ -43,6 +43,8 @@
   button.solid:hover{background:#46434f; color:#fff;}
   button.on{border-color:var(--accent); color:var(--accent); background:rgba(184,120,58,.1);}
   button.ghost{color:var(--muted);} button.small{padding:8px 12px; font-size:12px;}
+  .track-select{font-family:var(--sans); font-size:13px; color:var(--ink); cursor:pointer; background:rgba(255,255,255,.4); border:1px solid var(--line); border-radius:2px; padding:11px 20px; padding-right:32px; letter-spacing:.03em; outline:none; transition:all .2s ease; max-width:240px; -webkit-appearance:none; appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' stroke='%2334323c'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M1 1l4 4 4-4'/></svg>"); background-repeat:no-repeat; background-position:right 14px center;}
+  .track-select:hover,.track-select:focus{border-color:var(--accent); color:#000; background-color:rgba(255,255,255,.7);}
   #controls{position:absolute; left:50%; bottom:28px; transform:translateX(-50%); pointer-events:auto; display:flex; align-items:center; gap:13px; flex-wrap:wrap; justify-content:center;
     max-width:min(960px,95vw); padding:13px 20px; background:var(--panel); backdrop-filter:blur(18px) saturate(1.1); -webkit-backdrop-filter:blur(18px) saturate(1.1); border:1px solid rgba(255,255,255,.55); border-radius:4px; box-shadow:0 14px 50px rgba(60,50,70,.16);}
   #controls.hidden{display:none;}
@@ -146,7 +148,8 @@
     #hint p{font-size:12.5px; line-height:1.65; margin-bottom:20px;}
     #hint em{font-size:14px;}
     .hint-actions{gap:8px;}
-    .hint-actions button{padding:12px 16px; font-size:12px;}
+    .hint-actions button, .hint-actions select{padding:12px 16px; font-size:12px; height:40px;}
+    .track-select{max-width:100%; width:100%;}
     #controls{gap:8px; padding:10px 12px; bottom:12px; max-width:96vw; border-radius:8px;
       padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));}
     #playBtn{width:40px; height:40px; font-size:13px;}
@@ -202,10 +205,24 @@
       <div class="kicker">Le quattro stagioni</div>
       <h1>Let the music<br>paint the seasons</h1>
       <p>Upload a movement of Vivaldi's <em>Four Seasons</em> and the landscape matches its season — name the file <em>Spring</em>, <em>L'estate</em>, <em>Autumn</em>, <em>Winter</em> (or its RV number) and it knows. A ribbon of light glows for each voice of the orchestra, drifting on the stereo wind and mirrored in still water.</p>
-      <div class="hint-actions"><button class="solid" id="loadBtn">Begin with a track</button><button class="ghost" id="sweepBtn">Hear a test tone</button></div>
+      <div class="hint-actions">
+        <button class="solid" id="loadBtn">Upload a file</button>
+        <select class="track-select" id="trackSelect">
+          <option value="" disabled selected>Or choose a library track...</option>
+          <option value="Classicals.de-Vivaldi-The-Four-Seasons-01-John-Harrison-with-the-Wichita-State-University-Chamber-Players-Spring-Mvt-1-Allegro.mp3">🌸 Spring (Vivaldi)</option>
+          <option value="Spring 1 - Recomposed_ Vivaldi's Four Seasons (2012).mp3">🌸 Spring (Max Richter)</option>
+          <option value="Max Richter - Summer 3 - 2022 (Official Video).mp3">☀️ Summer (Max Richter)</option>
+          <option value="09+John+Harrison+with+the+Wichita+State+University+Chamber+Players+-+Autumn+Mvt+3+Allegro.mp3">🍂 Autumn (Vivaldi)</option>
+          <option value="Max Richter - Autumn 3 - 2022 (Official Video).mp3">🍂 Autumn (Max Richter)</option>
+          <option value="Classicals.de-Vivaldi-The-Four-Seasons-10-John-Harrison-with-the-Wichita-State-University-Chamber-Players-Winter-Mvt-1-Allegro-non-molto.mp3">❄️ Winter (Vivaldi)</option>
+        </select>
+        <button class="ghost" id="sweepBtn">Hear a test tone</button>
+      </div>
       <div style="margin-top:14px;"><button class="ghost" id="relaxBtn" style="font-family:var(--serif); font-style:italic; font-size:14px;">…or drift in a generative ambient world</button></div>
     </div>
     <div id="controls" class="hidden">
+      <button class="ghost small" id="backBtn" style="font-weight:600;">← Home</button>
+      <div class="divider"></div>
       <button id="playBtn" aria-label="Play">&#9654;</button>
       <span class="time" id="cur">0:00</span>
       <input id="seek" type="range" min="0" max="1000" value="0" aria-label="Seek" />
@@ -658,16 +675,23 @@
     let seeking=false, sweepOsc=null, curURL=null;
     const fmt=s=>{ s=Math.floor(s||0); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
     function showStatus(msg,ok){ const el=$('status'); el.textContent=msg; el.style.borderColor=ok?'rgba(120,170,120,.5)':'rgba(200,120,80,.45)'; el.style.color=ok?'#3f6a40':'#7a4a30'; el.classList.add('show'); clearTimeout(showStatus._t); showStatus._t=setTimeout(()=>el.classList.remove('show'), ok?2400:8000); }
-    async function loadFile(file){ ensureAudio(); try{ await audioCtx.resume(); }catch(e){}
-      if(curURL) URL.revokeObjectURL(curURL); curURL=URL.createObjectURL(file); audioEl.src=curURL;
-      hint.classList.add('gone'); controls.classList.remove('hidden'); sub.textContent=file.name.replace(/\.[^.]+$/,'');
-      const det=detectSeason(file.name); const sb=$('seasonBtn');
+    async function loadSource(src, name){ ensureAudio(); try{ await audioCtx.resume(); }catch(e){}
+      if(curURL){ URL.revokeObjectURL(curURL); curURL=null; }
+      if(src instanceof File){ curURL=URL.createObjectURL(src); audioEl.src=curURL; }
+      else { audioEl.src=src; }
+      hint.classList.add('gone'); controls.classList.remove('hidden');
+      const cleanName=name.replace(/\.[^.]+$/,'').replace(/^[0-9+]+|[0-9_]+/g,' ').trim();
+      sub.textContent=cleanName;
+      const det=detectSeason(name); const sb=$('seasonBtn');
       if(det){ seasonPhase=det.key; seasonAuto=false; sb.textContent='Seasons: hold'; sb.classList.remove('on'); }
-      else { seasonAuto=true; sb.textContent='Seasons: auto'; sb.classList.add('on'); }
-      try{ await audioEl.play(); showStatus(det?('Now playing · '+det.label):('Playing — '+file.name), true); }
-      catch(err){ showStatus("Loaded '"+file.name+"', but playback was blocked ("+err.name+"). Press play — and if it's still silent, open the downloaded file in a browser (the preview frame mutes audio)."); } }
-    fileInput.addEventListener('change', e=>{ const f=e.target.files[0]; if(f) loadFile(f); });
+      else { seasonPhase=Math.floor(Math.random()*4); seasonAuto=false; sb.textContent='Seasons: hold'; sb.classList.remove('on'); }
+      try{ await audioEl.play(); showStatus(det?('Now playing · '+det.label):('Playing — '+cleanName), true); }
+      catch(err){ showStatus("Loaded '"+cleanName+"', but playback was blocked ("+err.name+"). Press play — and if it's still silent, click play or check browser permissions."); } }
+    fileInput.addEventListener('change', e=>{ const f=e.target.files[0]; if(f) loadSource(f, f.name); });
     $('loadBtn').onclick=()=>fileInput.click(); $('loadBtn2').onclick=()=>fileInput.click();
+    $('trackSelect').onchange=e=>{ const val=e.target.value; if(val) loadSource(val, val.split('/').pop()); };
+    function goBack(){ if(!audioEl.paused) audioEl.pause(); if(sweepOsc) stopSweep(); if(Atmosphere.running) Atmosphere.stop(); if(micOn) stopMic(); controls.classList.add('hidden'); hint.classList.remove('gone'); $('trackSelect').value=""; showStatus('Returned to home screen', false); }
+    $('backBtn').onclick=goBack;
     playBtn.onclick=async ()=>{ ensureAudio(); try{ await audioCtx.resume(); }catch(e){} if(!audioEl.src && !sweepOsc){ fileInput.click(); return; }
       if(audioEl.paused){ try{ await audioEl.play(); showStatus('Playing',true); } catch(err){ showStatus("Playback blocked ("+err.name+"). Open the downloaded file in Chrome — the preview pane mutes audio."); } } else audioEl.pause(); };
     audioEl.addEventListener('play', ()=>playBtn.innerHTML='&#10074;&#10074;');
@@ -692,7 +716,7 @@
       if(k===' '){ e.preventDefault(); playBtn.click(); } else if(k==='f') toggleFS(); else if(k==='v') $('voicesBtn').click(); else if(k==='h') document.body.classList.toggle('hideui'); else if(k==='s') $('saveBtn').click();
       else if(k==='a') $('ambBtn').click(); else if(k==='m') $('moodBtn').click(); else if(k==='p') $('pomoBtn').click();
       else if(k==='l') fileInput.click();
-      else if(k==='escape'){ if(studyOn) setStudy(false); else if(Pomo.on) Pomo.show(false); }
+      else if(k==='escape'){ if(studyOn) setStudy(false); else if(Pomo.on) Pomo.show(false); else goBack(); }
       else if(k==='arrowright'){ seasonPhase+=0.5; }
       else if(k>='1'&&k<='4'){ seasonPhase=parseInt(k,10)-1; seasonAuto=false; const sb=$('seasonBtn'); sb.textContent='Seasons: hold'; sb.classList.remove('on'); } });
     let idleT=null; function poke(){ document.body.classList.remove('idle'); clearTimeout(idleT); idleT=setTimeout(()=>{ if(!audioEl.paused||sweepOsc||Atmosphere.running||micOn) document.body.classList.add('idle'); },3500); }
@@ -785,7 +809,7 @@
     $('studyBtn').onclick=()=>setStudy(!studyOn);
     window.addEventListener('dragover', e=>{ e.preventDefault(); document.body.classList.add('drag'); });
     window.addEventListener('dragleave', e=>{ if(e.relatedTarget===null) document.body.classList.remove('drag'); });
-    window.addEventListener('drop', e=>{ e.preventDefault(); document.body.classList.remove('drag'); const f=e.dataTransfer.files[0]; if(!f) return; if(f.type.startsWith('audio')||f.type.startsWith('video')||f.type===''){ loadFile(f); } else { showStatus("That doesn't look like an audio file. Try an .mp3."); } });
+    window.addEventListener('drop', e=>{ e.preventDefault(); document.body.classList.remove('drag'); const f=e.dataTransfer.files[0]; if(!f) return; if(f.type.startsWith('audio')||f.type.startsWith('video')||f.type===''){ loadSource(f, f.name); } else { showStatus("That doesn't look like an audio file. Try an .mp3."); } });
   })();
   </script>
 </body>
