@@ -22,7 +22,8 @@
     --serif:'Cormorant Garamond',Georgia,serif; --sans:'Archivo',-apple-system,sans-serif; }
   *{box-sizing:border-box; margin:0; padding:0;}
   html,body{height:100%; width:100%; overflow:hidden; background:#e7eef0; color:var(--ink); font-family:var(--sans);}
-  #c{position:fixed; inset:0; width:100%; height:100%; display:block; pointer-events:none;}
+  #c{position:fixed; inset:0; width:100%; height:100%; display:block; pointer-events:none; z-index:0;}
+  #topbar,#credit,#season,#hint,#controls,#hud,#diag,#pomo,#status{z-index:10;}
   #topbar{position:absolute; top:26px; left:30px; pointer-events:none; text-shadow:0 1px 12px rgba(255,255,255,.45); transition:opacity .5s ease;}
   .brand{font-family:var(--serif); font-weight:500; font-size:30px; letter-spacing:.04em; line-height:1; color:var(--ink);}
   .brand .dot{color:var(--accent);}
@@ -62,6 +63,7 @@
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:13px; height:13px; border-radius:50%; background:var(--accent); cursor:pointer;}
   input[type=range]::-moz-range-thumb{width:13px; height:13px; border:none; border-radius:50%; background:var(--accent); cursor:pointer;}
   #file{position:fixed; left:-9999px; top:0; width:1px; height:1px; opacity:0;}
+  .mobile-note{display:none; font-size:12px; line-height:1.5; color:rgba(52,48,62,.7); margin-top:12px;}
   #hud{position:absolute; right:30px; bottom:30px; pointer-events:none; text-align:right; font-size:10.5px; letter-spacing:.12em; color:rgba(60,56,70,.5); line-height:1.8; text-shadow:0 1px 8px rgba(255,255,255,.5);}
   #hud b{color:var(--accent); font-weight:600;}
   #diag{position:absolute; left:30px; bottom:30px; pointer-events:none; font-size:10.5px; letter-spacing:.08em; color:rgba(60,56,70,.45); font-variant-numeric:tabular-nums; text-shadow:0 1px 8px rgba(255,255,255,.5);}
@@ -123,6 +125,8 @@
     input[type=range]::-moz-range-thumb{width:22px; height:22px;}
     .task .tbox{width:22px; height:22px; font-size:13px; line-height:20px;}
     .task .tdel{opacity:.5; padding:0 6px; font-size:20px;}
+    .upload-only{display:none !important;}
+    .mobile-note{display:block;}
   }
 
   /* ---- tablet (≤ 768px) ---- */
